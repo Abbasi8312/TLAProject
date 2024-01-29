@@ -7,6 +7,24 @@ public class NFAToRegex {
     public static void main(String[] args) {
         GNFA gnfa = new GNFA();
     }
+
+    private void setStartState(GNFA gnfa, String startState) throws Exception {
+        if (!gnfa.hasState(startState)) {
+            throw new StateException();
+        }
+        gnfa.addTransition(gnfa.startState(), startState, "");
+    }
+
+    private void setFinalStates(GNFA gnfa, String[] finalStates) throws Exception {
+        for (String finalState : finalStates) {
+            if (!gnfa.hasState(finalState)) {
+                throw new StateException();
+            }
+        }
+        for (String finalState : finalStates) {
+            gnfa.addTransition(finalState, gnfa.finalState(), "");
+        }
+    }
 }
 
 class GNFA {
@@ -45,12 +63,28 @@ class GNFA {
         transitions.add(new Transition(from, to, ch + ""));
     }
 
+    public String startState() {
+        return startState;
+    }
+
+    public String finalState() {
+        return finalState;
+    }
+
+    public boolean hasState(String state) {
+        return states.contains(state);
+    }
+
+    public boolean hasAlphabet(char c) {
+        return alphabet.contains(c);
+    }
+
     record Transition(String from, String to, String regex) {
     }
+}
 
-    static class StateException extends Exception {
-    }
+class StateException extends Exception {
+}
 
-    static class AlphabetException extends Exception {
-    }
+class AlphabetException extends Exception {
 }
