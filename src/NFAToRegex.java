@@ -48,8 +48,12 @@ public class NFAToRegex {
             String repeat = "";
             for (GNFA.Transition transition : transitions) {
                 if (transition.from().equals(current)) {
-                    repeat = transition.regex() + "*";
-                    if (transition.regex().matches("^[^(].*\\+.*[^)]$")) {
+
+                    // Parentheses not needed only if length=1 or if it already contains parentheses at the start and end
+                    // But needed if it contains (not nested) parentheses in the middle or no parentheses at all
+                    if (transition.regex().matches("^(\\(([^()]*(\\([^()]*\\))?[^()]*)*\\)|.)$")) {
+                        repeat = transition.regex() + "*";
+                    } else {
                         repeat = "(" + transition.regex() + ")*";
                     }
                     break;
