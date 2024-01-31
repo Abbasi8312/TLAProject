@@ -11,7 +11,7 @@ public class NFAToRegex {
     }
 
     protected static String generateRegex(GNFA originalGNFA) {
-        GNFA gnfa = originalGNFA.clone();
+        GNFA gnfa = originalGNFA.copy();
         String current = gnfa.transitionsFrom(gnfa.startState()).get(0).to();
         while (!current.equals(gnfa.finalState())) {
             List<GNFA.Transition> transitions = gnfa.transitionsTo(current);

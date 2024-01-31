@@ -98,8 +98,7 @@ public class GNFA {
         addTransition(finalState, this.finalState, "");
     }
 
-    @Override
-    protected GNFA clone() {
+    protected GNFA copy() {
         GNFA gnfa = new GNFA();
         gnfa.states.addAll(states);
         gnfa.alphabet.addAll(alphabet);
@@ -107,6 +106,6 @@ public class GNFA {
         return gnfa;
     }
 
-    record Transition(String from, String to, String regex) {
+    public record Transition(String from, String to, String regex) {
     }
 }
