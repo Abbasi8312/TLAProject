@@ -5,53 +5,26 @@ public class NFAToRegex {
 
     public static void main(String[] args) {
         GNFA gnfa = new GNFA();
+        constructMachine(gnfa);
+        String regex = generateRegex(gnfa);
+        displayRegex(regex);
+        scanner.close();
+    }
+
+    private static void constructMachine(GNFA gnfa) {
+        getStates(gnfa);
+        getAlphabet(gnfa);
+        getStartState(gnfa);
+        getFinalStates(gnfa);
+        getTransitions(gnfa);
+    }
+
+    private static void displayRegex(String gnfa) {
+        System.out.println(gnfa);
+    }
+
+    private static void getTransitions(GNFA gnfa) {
         String input;
-        int n = getNumber("Enter the number of states: ");
-        for (int i = 0; i < n; i++) {
-            String state = getString("Enter the name of state " + (i + 1) + ": ");
-            if (state.equals("qs") || state.equals("qf") || state.matches("^\\s*$")) {
-                System.out.println("Invalid state name. qs, qf and \" \" are reserved. Please enter another name.");
-                i--;
-            } else if (gnfa.hasState(state)) {
-                System.out.println("Duplicate state name. Please enter another name.");
-                i--;
-            } else {
-                gnfa.addState(state);
-            }
-        }
-        int m = getNumber("Enter the number of alphabets: ");
-        for (int i = 0; i < m; i++) {
-            input = getString("Enter the name of alphabet " + (i + 1) + ": ");
-            char alphabet = input.charAt(0);
-            if (!input.matches("^\\S$")) {
-                System.out.println("Invalid input. Please enter a character.");
-                i--;
-            } else if (gnfa.hasAlphabet(alphabet)) {
-                System.out.println("Duplicate alphabet name. Please enter another name.");
-                i--;
-            } else {
-                gnfa.addAlphabet(alphabet);
-            }
-        }
-        while (true) {
-            String start = getString("Enter the name of start state: ");
-            if (!gnfa.hasState(start)) {
-                System.out.println("State not found. Please enter a valid state name.");
-            } else {
-                gnfa.setStartState(start);
-                break;
-            }
-        }
-        int k = getNumber("Enter the number of final states: ");
-        for (int i = 0; i < k; i++) {
-            String finalState = getString("Enter the name of final state " + (i + 1) + ": ");
-            if (!gnfa.hasState(finalState)) {
-                System.out.println("State not found. Please enter a valid state name.");
-                i--;
-            } else {
-                gnfa.addFinalState(finalState);
-            }
-        }
         int t = getNumber("Enter the number of transitions: ");
         for (int i = 0; i < t; i++) {
             input = getString(
@@ -78,8 +51,65 @@ public class NFAToRegex {
                 gnfa.addTransition(source, destination, symbol);
             }
         }
-        System.out.println(generateRegex(gnfa));
-        scanner.close();
+    }
+
+    private static void getFinalStates(GNFA gnfa) {
+        int k = getNumber("Enter the number of final states: ");
+        for (int i = 0; i < k; i++) {
+            String finalState = getString("Enter the name of final state " + (i + 1) + ": ");
+            if (!gnfa.hasState(finalState)) {
+                System.out.println("State not found. Please enter a valid state name.");
+                i--;
+            } else {
+                gnfa.addFinalState(finalState);
+            }
+        }
+    }
+
+    private static void getStartState(GNFA gnfa) {
+        while (true) {
+            String start = getString("Enter the name of start state: ");
+            if (!gnfa.hasState(start)) {
+                System.out.println("State not found. Please enter a valid state name.");
+            } else {
+                gnfa.setStartState(start);
+                break;
+            }
+        }
+    }
+
+    private static void getAlphabet(GNFA gnfa) {
+        String input;
+        int m = getNumber("Enter the number of alphabets: ");
+        for (int i = 0; i < m; i++) {
+            input = getString("Enter the name of alphabet " + (i + 1) + ": ");
+            char alphabet = input.charAt(0);
+            if (!input.matches("^\\S$")) {
+                System.out.println("Invalid input. Please enter a character.");
+                i--;
+            } else if (gnfa.hasAlphabet(alphabet)) {
+                System.out.println("Duplicate alphabet name. Please enter another name.");
+                i--;
+            } else {
+                gnfa.addAlphabet(alphabet);
+            }
+        }
+    }
+
+    private static void getStates(GNFA gnfa) {
+        int n = getNumber("Enter the number of states: ");
+        for (int i = 0; i < n; i++) {
+            String state = getString("Enter the name of state " + (i + 1) + ": ");
+            if (state.equals("qs") || state.equals("qf") || state.matches("^\\s*$")) {
+                System.out.println("Invalid state name. qs, qf and \" \" are reserved. Please enter another name.");
+                i--;
+            } else if (gnfa.hasState(state)) {
+                System.out.println("Duplicate state name. Please enter another name.");
+                i--;
+            } else {
+                gnfa.addState(state);
+            }
+        }
     }
 
     private static String getString(String prompt) {
