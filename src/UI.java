@@ -7,16 +7,34 @@ public class UI {
         scanner = new Scanner(System.in);
     }
 
-    public void constructMachine(GNFA gnfa) {
-        getStates(gnfa);
-        getAlphabet(gnfa);
-        getStartState(gnfa);
-        getFinalStates(gnfa);
-        getTransitions(gnfa);
+    private static void separator() {
+        System.out.println(
+                "|---------------------------------------------------------------------------------------------------");
     }
 
-    public void displayRegex(String gnfa) {
-        System.out.println(gnfa);
+    private static void printLine(String x) {
+        System.out.println("| " + x);
+    }
+
+    public void constructMachine(GNFA gnfa) {
+        System.out.println(
+                "----------------------------------------------------------------------------------------------------");
+        getStates(gnfa);
+        separator();
+        getAlphabet(gnfa);
+        separator();
+        getStartState(gnfa);
+        separator();
+        getFinalStates(gnfa);
+        separator();
+        getTransitions(gnfa);
+        separator();
+    }
+
+    public void displayRegex(String regex) {
+        printLine("Regex: " + regex);
+        System.out.println(
+                "----------------------------------------------------------------------------------------------------");
     }
 
     private void getStates(GNFA gnfa) {
@@ -24,10 +42,10 @@ public class UI {
         for (int i = 0; i < n; i++) {
             String state = getString("Enter the name of state " + (i + 1) + ": ");
             if (state.equals("qs") || state.equals("qf") || state.matches("^\\s*$")) {
-                System.out.println("Invalid state name. qs, qf and \" \" are reserved. Please enter another name.");
+                printLine("|Invalid state name. qs, qf and \" \" are reserved. Please enter another name.");
                 i--;
             } else if (gnfa.hasState(state)) {
-                System.out.println("Duplicate state name. Please enter another name.");
+                printLine("|Duplicate state name. Please enter another name.");
                 i--;
             } else {
                 gnfa.addState(state);
@@ -42,10 +60,10 @@ public class UI {
             input = getString("Enter the name of alphabet " + (i + 1) + ": ");
             char alphabet = input.charAt(0);
             if (!input.matches("^\\S$")) {
-                System.out.println("Invalid input. Please enter a character.");
+                printLine("Invalid input. Please enter a character.");
                 i--;
             } else if (gnfa.hasAlphabet(alphabet)) {
-                System.out.println("Duplicate alphabet name. Please enter another name.");
+                printLine("Duplicate alphabet name. Please enter another name.");
                 i--;
             } else {
                 gnfa.addAlphabet(alphabet);
@@ -57,7 +75,7 @@ public class UI {
         while (true) {
             String start = getString("Enter the name of start state: ");
             if (!gnfa.hasState(start)) {
-                System.out.println("State not found. Please enter a valid state name.");
+                printLine("State not found. Please enter a valid state name.");
             } else {
                 gnfa.setStartState(start);
                 break;
@@ -70,7 +88,7 @@ public class UI {
         for (int i = 0; i < k; i++) {
             String finalState = getString("Enter the name of final state " + (i + 1) + ": ");
             if (!gnfa.hasState(finalState)) {
-                System.out.println("State not found. Please enter a valid state name.");
+                printLine("State not found. Please enter a valid state name.");
                 i--;
             } else {
                 gnfa.addFinalState(finalState);
@@ -86,7 +104,7 @@ public class UI {
                     "Enter the source state, destination state and alphabet of transition " + (i + 1) + " seperated by space: ");
             String[] inputs = input.split(" ");
             if (inputs.length != 3) {
-                System.out.println("Invalid input.");
+                printLine("Invalid input.");
                 i--;
                 continue;
             }
@@ -94,13 +112,13 @@ public class UI {
             String destination = inputs[1];
             char symbol = inputs[2].charAt(0);
             if (!gnfa.hasState(source) || !gnfa.hasState(destination)) {
-                System.out.println("State not found. Please enter valid state names.");
+                printLine("State not found. Please enter valid state names.");
                 i--;
             } else if (!inputs[2].matches("^\\S$")) {
-                System.out.println("Invalid Alphabet. Please enter a character.");
+                printLine("Invalid Alphabet. Please enter a character.");
                 i--;
             } else if (!gnfa.hasAlphabet(symbol)) {
-                System.out.println("Alphabet not found. Please enter a valid alphabet name.");
+                printLine("Alphabet not found. Please enter a valid alphabet name.");
                 i--;
             } else {
                 gnfa.addTransition(source, destination, symbol);
@@ -110,17 +128,17 @@ public class UI {
 
     private String getString(String prompt) {
         String input;
-        System.out.print(prompt);
+        System.out.print("| " + prompt);
         input = scanner.nextLine();
         return input;
     }
 
     private int getNumber(String prompt) {
         String input;
-        System.out.print(prompt);
+        System.out.print("| " + prompt);
         input = scanner.nextLine();
         while (!input.matches("^[0-9]+$")) {
-            System.out.println("Invalid input. Please enter a number.");
+            printLine("Invalid input. Please enter a number.");
             System.out.print(prompt);
             input = scanner.nextLine();
         }
