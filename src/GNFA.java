@@ -37,6 +37,12 @@ public class GNFA {
                 } else {
                     tmp = transitions.get(i).regex();
                 }
+                if (tmp.isEmpty()) {
+                    tmp = "ε";
+                }
+                if (regex.isEmpty()) {
+                    regex = "ε";
+                }
                 transitions.set(i, new Transition(from, to, "(" + tmp + "+" + regex + ")"));
             }
         }

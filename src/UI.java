@@ -99,6 +99,7 @@ public class UI {
     private void getTransitions(GNFA gnfa) {
         String input;
         int t = getNumber("Enter the number of transitions: ");
+        printLine("*Use bb for epsilon transition.*");
         for (int i = 0; i < t; i++) {
             input = getString(
                     "Enter the source state, destination state and alphabet of transition " + (i + 1) + " seperated by space: ");
@@ -114,6 +115,8 @@ public class UI {
             if (!gnfa.hasState(source) || !gnfa.hasState(destination)) {
                 printLine("State not found. Please enter valid state names.");
                 i--;
+            } else if (inputs[2].equals("bb")) {
+                gnfa.addTransition(source, destination, "");
             } else if (!inputs[2].matches("^\\S$")) {
                 printLine("Invalid Alphabet. Please enter a character.");
                 i--;
